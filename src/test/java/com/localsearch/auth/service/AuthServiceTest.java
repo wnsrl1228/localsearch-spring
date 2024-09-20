@@ -1,16 +1,18 @@
 package com.localsearch.auth.service;
 
+import com.localsearch.auth.dto.LoginTokens;
 import com.localsearch.auth.dto.request.LoginRequest;
 import com.localsearch.auth.dto.request.SignUpRequest;
+import com.localsearch.auth.infrastructure.JwtProvider;
 import com.localsearch.global.exception.AuthException;
 import com.localsearch.global.exception.ErrorCode;
 import com.localsearch.member.domain.Member;
 import com.localsearch.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
 @Transactional
@@ -30,6 +33,8 @@ class AuthServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @MockBean
+    private JwtProvider jwtProvider;
 
     private static final String REGISTERED_USERID = "registeredUser123";
     private static final String REGISTERED_PASSWORD = "registeredPassword123!";
@@ -37,33 +42,30 @@ class AuthServiceTest {
     private static final String UNREGISTERED_USERID = "unregisteredUser456";
     private static final String UNREGISTERED_PASSWORD = "unregisteredPassword456!";
     private static final String UNREGISTERED_NICKNAME = "unregisteredNickname";
-
-
-
-    private Member initMember;
-
-    @BeforeEach
-    void init() {
-        initMember = memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
-    }
+    private static final String ACCESS_TOKEN = "accessToken";
+    private static final String REFRESH_TOKEN = "refreshToken";
 
     @Test
     @DisplayName("로그인에 성공한다.")
     void login_success() {
         // given
+        memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
+        given(jwtProvider.createLoginTokens("1")).willReturn(new LoginTokens(ACCESS_TOKEN, REFRESH_TOKEN));
         LoginRequest loginRequest = new LoginRequest(REGISTERED_USERID, REGISTERED_PASSWORD);
 
         // when
-        boolean result = authService.login(loginRequest);
+        LoginTokens loginTokens = authService.login(loginRequest);
 
-        //then
-        assertThat(result).isTrue();
+        // then
+        assertThat(loginTokens.getAccessToken()).isEqualTo(ACCESS_TOKEN);
+        assertThat(loginTokens.getRefreshToken()).isEqualTo(REFRESH_TOKEN);
     }
 
     @Test
     @DisplayName("아이디가 일치하지 않아 로그인에 실패한다.")
     void login_fail_1() {
         // given
+        memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
         LoginRequest loginRequest = new LoginRequest("fail-userId", REGISTERED_PASSWORD);
 
         // when then
@@ -76,6 +78,7 @@ class AuthServiceTest {
     @DisplayName("비밀번호가 일치하지 않아 로그인에 실패한다.")
     void login_fail_2() {
         // given
+        memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
         LoginRequest loginRequest = new LoginRequest(REGISTERED_USERID, "fail-password");
 
         // when then
@@ -89,18 +92,21 @@ class AuthServiceTest {
     void signUp_success() {
         // given
         SignUpRequest signUpRequest = new SignUpRequest(UNREGISTERED_USERID, UNREGISTERED_PASSWORD, UNREGISTERED_NICKNAME);
+        given(jwtProvider.createLoginTokens("1")).willReturn(new LoginTokens(ACCESS_TOKEN, REFRESH_TOKEN));
 
         // when
-        boolean result = authService.signUp(signUpRequest);
+        LoginTokens loginTokens = authService.signUp(signUpRequest);
 
         // then
-        assertThat(result).isTrue();
+        assertThat(loginTokens.getAccessToken()).isEqualTo(ACCESS_TOKEN);
+        assertThat(loginTokens.getRefreshToken()).isEqualTo(REFRESH_TOKEN);
     }
 
     @Test
     @DisplayName("유저아이디가 일치하여 회원가입에 실패한다.")
     void signUp_fail_1() {
         // given
+        memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
         SignUpRequest signUpRequest = new SignUpRequest(REGISTERED_USERID, UNREGISTERED_PASSWORD, UNREGISTERED_NICKNAME);
 
         // when then
@@ -113,6 +119,7 @@ class AuthServiceTest {
     @DisplayName("닉네임이 일치하여 회원가입에 실패한다.")
     void signUp_fail_2() {
         // given
+        memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
         SignUpRequest signUpRequest = new SignUpRequest(UNREGISTERED_USERID, UNREGISTERED_PASSWORD, REGISTERED_NICKNAME);
 
         // when then
