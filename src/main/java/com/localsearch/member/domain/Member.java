@@ -26,7 +26,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 30)
     private String nickname;
 
     @Enumerated(value = EnumType.STRING)
