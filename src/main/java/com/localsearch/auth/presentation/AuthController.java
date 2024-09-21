@@ -1,6 +1,7 @@
 package com.localsearch.auth.presentation;
 
 import com.localsearch.auth.dto.LoginTokens;
+import com.localsearch.auth.dto.request.AccessTokenRequest;
 import com.localsearch.auth.dto.request.LoginRequest;
 import com.localsearch.auth.dto.request.SignUpRequest;
 import com.localsearch.auth.dto.response.TokenResponse;
@@ -31,9 +32,9 @@ public class AuthController {
 
     @PostMapping("/auth/token")
     public ResponseEntity<TokenResponse> refreshAccessToken(
-            @RequestBody final String refreshToken
+            @RequestBody final AccessTokenRequest accessTokenRequest
     ) {
-        final String accessToken = authService.renewAccessToken(refreshToken);
+        final String accessToken = authService.renewAccessToken(accessTokenRequest.getRefreshToken());
         return ResponseEntity.ok().body(new TokenResponse(accessToken));
     }
 }

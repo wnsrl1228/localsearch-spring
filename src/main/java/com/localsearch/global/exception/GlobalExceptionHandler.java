@@ -42,7 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleAuthException(AuthException e) {
         log.info("[Response sent: AuthException - {}]", e.getMessage());
 
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(e.getCode(), e.getMessage()));
     }
 
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleInvalidException(InvalidException e) {
         log.info("[Response sent: InvalidException - {}]", e.getMessage());
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+        return ResponseEntity.badRequest()
                 .body(new ErrorResponse(e.getCode(), e.getMessage()));
     }
 
