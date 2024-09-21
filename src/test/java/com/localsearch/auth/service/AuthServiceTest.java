@@ -127,4 +127,34 @@ class AuthServiceTest {
                 .isInstanceOf(AuthException.class)
                 .hasMessage(ErrorCode.DUPLICATE_NICKNAME.getMessage());
     }
+
+    @Test
+    @DisplayName("토큰 갱신에 성공한다.")
+    void renewAccessToken_success() {
+        // given
+        memberRepository.save(new Member(REGISTERED_USERID, passwordEncoder.encode(REGISTERED_PASSWORD), REGISTERED_NICKNAME));
+        given(jwtProvider.createLoginTokens("1")).willReturn(new LoginTokens("accessToken", "refreshToken"));
+        String refreshToken = authService.login(new LoginRequest(REGISTERED_USERID, REGISTERED_PASSWORD)).getRefreshToken();
+
+        // when
+        given(jwtProvider.validateToken(refreshToken)).willReturn(null);
+        given(jwtProvider.createAccessToken("1")).willReturn("accessToken");
+        String accessToken = authService.renewAccessToken(refreshToken);
+
+        // then
+        assertThat(accessToken).isEqualTo("accessToken");
+    }
+
+    @Test
+    @DisplayName("토큰 갱신 시, DB에 존재하지 않는 리프레시 토큰을 사용할 경우 예외가 발생한다.")
+    void renewAccessToken_INVALID_REFRESH_TOKEN() {
+
+        // given
+        given(jwtProvider.validateToken("")).willReturn(null);
+
+        // when & then
+        assertThatThrownBy(() -> authService.renewAccessToken(""))
+                .isInstanceOf(AuthException.class)
+                .hasMessage(ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+    }
 }

@@ -70,4 +70,19 @@ public class AuthService {
                 );
         return loginTokens;
     }
+
+    public String renewAccessToken(final String refreshToken) {
+
+        try {
+            jwtProvider.validateToken(refreshToken);
+        } catch (AuthException e) {
+            throw new AuthException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+
+        final RefreshToken findRefreshToken = refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new AuthException(ErrorCode.INVALID_REFRESH_TOKEN));
+
+        return jwtProvider.createAccessToken(findRefreshToken.getMemberId().toString());
+    }
+
 }
