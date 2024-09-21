@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/",
                         "/login",
                         "/auth/token",
-                        "/sigh-up",
+                        "/sign-up",
                         "/*.ico",
                         "/healthy/check",
                         "/error"
