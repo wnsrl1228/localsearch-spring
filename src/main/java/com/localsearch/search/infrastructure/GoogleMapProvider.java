@@ -45,7 +45,7 @@ public class GoogleMapProvider {
         categoryMap.put("store", storeList);                  // 상점
     }
 
-    public LocalSearchAPIResponse requestLocalSearch(double latitude, double longitude, String category, String rankPreference) {
+    public LocalSearchAPIResponse requestLocalSearch(double latitude, double longitude, double radius, String category, String rankPreference) {
 
         // Request Body
         List<String> includedTypes = getIncludedTypes(category);
@@ -53,7 +53,7 @@ public class GoogleMapProvider {
                 includedTypes,
                 20,
                 rankPreference,
-                latitude, longitude, 500
+                latitude, longitude, radius
         );
 
         HttpHeaders headers = new HttpHeaders();
@@ -80,10 +80,6 @@ public class GoogleMapProvider {
     }
 
     private List<String> getIncludedTypes(String category) {
-
-        if (category.equals("all")) {
-            return null;
-        }
 
         List<String> includedTypes = categoryMap.getOrDefault(category, null);
         if (includedTypes == null) {

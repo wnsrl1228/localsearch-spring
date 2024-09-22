@@ -19,9 +19,10 @@ public class SearchController {
     public ResponseEntity<LocalSearchResponse> search(
             @RequestParam("latitude") double latitude,
             @RequestParam("longitude") double longitude,
-            @RequestParam("category") String category,
+            @RequestParam(value = "radius", defaultValue = "500") double radius,
+            @RequestParam(value = "category", defaultValue = "food") String category,
             @RequestParam(value = "sort", defaultValue = "POPULARITY") String rankPreference
     ) {
-        return ResponseEntity.ok().body(searchService.getLocalPlaces(latitude, longitude, category, rankPreference));
+        return ResponseEntity.ok().body(searchService.getLocalPlaces(latitude, longitude, radius, category, rankPreference));
     }
 }

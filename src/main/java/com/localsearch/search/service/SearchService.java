@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class SearchService {
 
     private final GoogleMapProvider googleMapProvider;
-    public LocalSearchResponse getLocalPlaces(double latitude, double longitude, String category, String rankPreference) {
+    public LocalSearchResponse getLocalPlaces(double latitude, double longitude, double radius, String category, String rankPreference) {
 
         LocalSearchAPIResponse localSearchAPIResponse
-                = googleMapProvider.requestLocalSearch(latitude, longitude, category, rankPreference);
+                = googleMapProvider.requestLocalSearch(latitude, longitude, radius, category, rankPreference);
 
         return LocalSearchResponse.ofPlaces(localSearchAPIResponse.getPlaces());
     }
