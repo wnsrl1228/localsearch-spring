@@ -24,7 +24,7 @@ public class GoogleMapProvider {
 
     private final Map<String, List<String>> categoryMap = new HashMap<>();;
     private final List<String> medicalList = Arrays.asList("dental_clinic", "dentist", "doctor", "drugstore", "hospital", "medical_lab", "pharmacy", "physiotherapist", "spa");
-    private final List<String> cafeBakeryList = Arrays.asList("cafe", "coffee_shop", "baker");
+    private final List<String> cafeBakeryList = Arrays.asList("cafe", "coffee_shop", "bakery");
     private final List<String> foodList = Arrays.asList("restaurant", "sandwich_shop", "steak_house", "ice_cream_shop", "bar");
     private final List<String> accommodationList =  Arrays.asList("bed_and_breakfast", "campground", "camping_cabin", "cottage", "extended_stay_hotel", "farmstay", "guest_house", "hostel", "hotel", "lodging", "motel", "private_guest_room", "resort_hotel", "rv_park");
     private final List<String> storeList =  Arrays.asList("store");
@@ -59,7 +59,7 @@ public class GoogleMapProvider {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-Goog-Api-Key", apiSecretKey);  // API Key 설정
-        headers.set("X-Goog-FieldMask", "places.displayName,places.id,places.primaryTypeDisplayName,places.location,places.primaryType,places.formattedAddress,places.attributions,places.googleMapsUri");
+        headers.set("X-Goog-FieldMask", "places.displayName,places.id,places.primaryTypeDisplayName,places.location,places.formattedAddress,places.attributions,places.googleMapsUri");
 
         HttpEntity<LocalSearchAPIRequest> entity = new HttpEntity<>(requestBody, headers);
 
@@ -71,7 +71,6 @@ public class GoogleMapProvider {
                     entity,
                     LocalSearchAPIResponse.class
             );
-
             return Optional.ofNullable(localSearchAPIResponse.getBody())
                     .orElseThrow(() -> new InvalidException(ErrorCode.INVALID_SEARCH_REQUEST));
 
