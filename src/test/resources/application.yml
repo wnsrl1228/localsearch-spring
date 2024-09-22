@@ -24,3 +24,8 @@ jwt:
   refresh-expiration-time: 604800000
   claims:
     issuer: "local-search"
+
+google-map:
+  provider:
+    api-url: "https://places.googleapis.com/v1/places:searchNearby"
+    api-secret-key: "asdasdwwwwfHFpbuJJvelRGGQGeRdsdswRlH30BA"

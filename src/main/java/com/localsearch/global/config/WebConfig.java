@@ -30,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/",
+                        "/search", // TODO : 임시
                         "/login",
                         "/auth/token",
                         "/sign-up",

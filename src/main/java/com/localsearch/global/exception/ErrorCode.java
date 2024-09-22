@@ -16,7 +16,9 @@ public enum ErrorCode {
     EXPIRED_TOKEN(4003, "만료된 토큰입니다."),
     INVALID_REFRESH_TOKEN(4004, "로그인 유효기간이 만료되었습니다"),
 
-    INVALID_JWT_FORMAT(5001, "유효하지 않은 JWT 형식입니다.");
+    INVALID_JWT_FORMAT(5001, "유효하지 않은 JWT 형식입니다."),
+
+    INVALID_SEARCH_REQUEST(6000, "잘못된 형식의 검색 요청입니다.");
     private final int code;
     private final String message;
 
