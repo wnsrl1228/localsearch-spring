@@ -9,5 +9,5 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @EntityGraph(attributePaths = "member")
-    List<Review> findByPlacePlaceId(String placeId);
+    List<Review> findByPlacePlaceIdOrderByCreatedAtDesc(String placeId);
 }

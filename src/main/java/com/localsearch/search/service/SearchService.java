@@ -46,7 +46,7 @@ public class SearchService {
             return PlaceReviewResponse.of(placeId);
         }
         // - 있을 경우 : 장소 데이터와 리뷰 데이터 반환
-        List<Review> reviews = reviewRepository.findByPlacePlaceId(placeId);
+        List<Review> reviews = reviewRepository.findByPlacePlaceIdOrderByCreatedAtDesc(placeId);
 
         return PlaceReviewResponse.of(place, reviews);
     }
