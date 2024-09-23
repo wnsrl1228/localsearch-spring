@@ -18,7 +18,10 @@ public enum ErrorCode {
 
     INVALID_JWT_FORMAT(5001, "유효하지 않은 JWT 형식입니다."),
 
-    INVALID_SEARCH_REQUEST(6000, "잘못된 형식의 검색 요청입니다.");
+    INVALID_SEARCH_REQUEST(6000, "잘못된 형식의 검색 요청입니다."),
+
+
+    NOT_FOUND_MEMBER_ID(7000, "해당 멤버를 찾을 수 없습니다.");
     private final int code;
     private final String message;
 

@@ -1,8 +1,12 @@
 package com.localsearch.search.presentation;
 
+import com.localsearch.auth.Login;
+import com.localsearch.auth.dto.LoginMember;
+import com.localsearch.search.dto.request.CreateReviewRequest;
 import com.localsearch.search.dto.response.LocalSearchResponse;
 import com.localsearch.search.dto.response.PlaceReviewResponse;
 import com.localsearch.search.service.SearchService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,4 +36,12 @@ public class SearchController {
         return ResponseEntity.ok().body(searchService.getPlaceReview(placeId));
     }
 
+    @PostMapping("/search/review")
+    public ResponseEntity<Void> createReview(
+            @RequestBody @Valid final CreateReviewRequest createReviewRequest,
+            @Login final LoginMember loginMember
+    ) {
+        searchService.createReview(loginMember.getMemberId(), createReviewRequest);
+        return ResponseEntity.noContent().build();
+    }
 }

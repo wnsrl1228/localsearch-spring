@@ -26,6 +26,7 @@ public class AuthHandlerInterceptor implements HandlerInterceptor {
                 .orElseThrow(() -> new AuthException(ErrorCode.INVALID_TOKEN));
 
         final Long memberId = Long.valueOf(subject);
+
         request.setAttribute("memberId", memberId);
         log.info("[Member ID {} accessed the resource]", memberId);
 

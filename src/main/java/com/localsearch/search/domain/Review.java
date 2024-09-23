@@ -41,4 +41,11 @@ public class Review {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public Review(Member member, Place place, String content, double rating) {
+        this.member = member;
+        this.place = place;
+        this.content = content;
+        this.rating = rating;
+    }
 }

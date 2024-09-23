@@ -22,4 +22,18 @@ public class Place {
 
     @Column(nullable = false)
     private int reviewCount;
+
+    public Place(String placeId, double rating, int reviewCount) {
+        this.placeId = placeId;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
+    }
+    public Place(String placeId) {
+        this(placeId, 0.0, 0);
+    }
+
+    public void updateRatingAndReviewCount(double rating) {
+        this.rating = Math.floor((this.rating * reviewCount + rating) / (reviewCount + 1) * 10) / 10;
+        this.reviewCount += 1;
+    }
 }

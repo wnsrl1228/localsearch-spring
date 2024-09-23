@@ -1,13 +1,17 @@
 package com.localsearch.global.config;
 
 import com.localsearch.auth.AuthHandlerInterceptor;
+import com.localsearch.auth.LoginMemberArgumentResolver;
 import com.localsearch.auth.infrastructure.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -37,5 +41,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "/healthy/check",
                         "/error"
                 ); // 핸들러가 실행되면 안되는 애들
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new LoginMemberArgumentResolver(jwtProvider));
     }
 }
