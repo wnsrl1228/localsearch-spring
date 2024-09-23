@@ -1,12 +1,11 @@
 package com.localsearch.search.presentation;
 
 import com.localsearch.search.dto.response.LocalSearchResponse;
+import com.localsearch.search.dto.response.PlaceReviewResponse;
 import com.localsearch.search.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RequiredArgsConstructor
@@ -25,4 +24,12 @@ public class SearchController {
     ) {
         return ResponseEntity.ok().body(searchService.getLocalPlaces(latitude, longitude, radius, category, rankPreference));
     }
+
+    @GetMapping("/search/place/{placeId}")
+    public ResponseEntity<PlaceReviewResponse> searchPlaceReview(
+            @PathVariable final String placeId
+    ) {
+        return ResponseEntity.ok().body(searchService.getPlaceReview(placeId));
+    }
+
 }
